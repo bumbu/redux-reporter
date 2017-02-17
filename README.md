@@ -17,7 +17,7 @@ Create your reporting middleware
 // /middleware/myReporter.js
 import reporter from 'redux-reporter';
 
-export default reporter(({ type, payload }, getState) => {
+export default reporter(({ type, payload }, getState, dispatch) => {
 
     try {
         // report to external API

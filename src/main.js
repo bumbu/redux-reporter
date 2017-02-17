@@ -1,6 +1,6 @@
 const defaultSelect = ({ meta = {} }) => meta.report
 
-const reporter = (handler, select = defaultSelect) => ({ getState }) => (next) => (action) => {
+const reporter = (handler, select = defaultSelect) => ({ getState, dispatch }) => (next) => (action) => {
   const returnValue = next(action)
 
   if (typeof action === 'function') {
@@ -13,7 +13,7 @@ const reporter = (handler, select = defaultSelect) => ({ getState }) => (next) =
     return returnValue
   }
 
-  handler(report, getState)
+  handler(report, getState, dispatch)
 
   return returnValue
 }
@@ -33,13 +33,13 @@ const errorSelect = ({ error = false, payload, type }) => {
 
 export const errorReporter = (handler) => reporter(handler, errorSelect)
 
-export const crashReporter = (handler) => ({ getState }) => (next) => (action) => {
+export const crashReporter = (handler) => ({ getState, dispatch }) => (next) => (action) => {
   let returnValue
 
   try {
     returnValue = next(action)
   } catch (err) {
-    handler(err, getState)
+    handler(err, getState, dispatch)
     console.error(err)
   }
 
